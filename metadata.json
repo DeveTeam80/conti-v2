@@ -1,0 +1,6 @@
+{
+  "name": "Elyse Residence",
+  "description": "An elegant, high-fidelity replication of the Elyse Residence premium luxury home website hero section and navbar, styled beautifully with responsive layout, custom typography, and ambient lighting.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

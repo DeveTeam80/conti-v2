@@ -1,0 +1,77 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Jost:ital,wght@0,100..900;1,100..900&display=swap');
+
+@import "tailwindcss";
+
+/* 1. Register Theme Tokens, Typography Mappings & Gradients */
+@theme {
+  --color-brown-deep: #0f395c;
+  --color-brown-mid: #4a3c3c;
+  --color-brown: #352b2b;
+
+  --color-gold-a: #eec06b;
+  --color-gold-b: #ca8c19;
+  --color-gold-mid: #d4a43c;
+
+  --color-navy-deep: #092540;
+  --color-navy: #0f395c;
+
+  --color-warm-1: #f4ede2;
+  --color-warm-2: #ece3d6;
+  --color-warm-3: #e0d5c4;
+
+  --color-offWhite: #faf8f4;
+
+  --font-serif: "Cormorant Garamond", "Georgia", serif;
+  --font-sans: "Jost", sans-serif;
+
+  --bg-gold-grad: linear-gradient(90deg, #eec06b 0%, #ca8c19 100%);
+}
+
+/* 2. Responsive Premium Fluid Scaling Canvas Setup */
+html {
+  font-size: calc(16 * (100vw / 1920));
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+@media (max-width: 479px) {
+  html {
+    font-size: calc(16 * (100vw / 375));
+  }
+}
+
+@media (min-width: 1920px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+/* 3. Base Architectural Node Overrides to set bg to white as requested */
+body {
+  margin: 0;
+  background-color: #ffffff;
+  color: var(--color-brown-deep);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, .font-editorial {
+  font-family: var(--font-serif);
+  letter-spacing: 0.03em;
+}
+
+/* 4. Custom Architectural Layout Utilities */
+.text-style-3lines {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.text-gradient-gold {
+  background: var(--bg-gold-grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
