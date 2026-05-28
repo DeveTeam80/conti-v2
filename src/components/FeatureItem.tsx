@@ -20,7 +20,7 @@ const FeatureItem: React.FC<FeatureItemProps> = ({ label, value, sub, delay = 0 
       className="relative group p-8 md:p-10 rounded-[35px] border border-gold/30 overflow-hidden"
     >
       {/* Glassmorphism Background */}
-      <div className="absolute inset-0 bg-secondary backdrop-blur-[4px] transition-colors duration-500 group-hover:bg-white/[0.06]" />
+      <div className="absolute inset-0 bg-white backdrop-blur-[4px] transition-colors duration-500 group-hover:bg-white/[0.06]" />
       
       <div className="relative z-10 flex items-center justify-between gap-6">
         <div>

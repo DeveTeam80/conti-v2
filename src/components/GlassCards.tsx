@@ -1,165 +1,178 @@
 "use client";
 
-import React from 'react';
-import { motion } from 'motion/react';
-import { 
-  Compass, 
-  Wind, 
-  Layers, 
-  Sun,
-  Sparkles,
-  ArrowUpRight
-} from 'lucide-react';
+import React, { useRef, useEffect, useState } from 'react';
+import { motion, useInView } from 'motion/react';
 
-interface CardData {
-  id: number;
-  num: string;
-  icon: React.ComponentType<{ className?: string; size?: number | string }>;
-  title: string;
-  description: string;
-  accentText: string;
+/* ─────────────────────────────────────────
+   COUNTER HOOK
+   Counts from 0 → target over `duration` ms
+   once the element scrolls into view.
+───────────────────────────────────────── */
+function useCounter(target: number, duration: number = 1800, started: boolean = false) {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    if (!started) {
+      setCount(0); // reset when out of view
+      return;
+    }
+    let startTime: number | null = null;
+    let raf: number;
+    const step = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+      const progress = Math.min((timestamp - startTime) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setCount(Math.floor(eased * target));
+      if (progress < 1) raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf); // cleanup if leaves view mid-count
+  }, [started, target, duration]);
+
+  return count;
 }
 
-const CARDS_DATA: CardData[] = [
+/* ─────────────────────────────────────────
+   SINGLE METRIC ITEM
+───────────────────────────────────────── */
+interface MetricProps {
+  num: string;       // e.g. "20+", "500+", "55"
+  label: string;
+  sub: string;
+  delay: number;
+}
+
+function MetricItem({ num, label, sub, delay }: MetricProps) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: false, amount: 0.4 });
+
+  // Parse numeric part and suffix ("+", "", etc.)
+  const match = num.match(/^(\d+)(\D*)$/);
+  const target = match ? parseInt(match[1], 10) : 0;
+  const suffix = match ? match[2] : '';
+
+  const count = useCounter(target, 1800, inView);
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 20 }}
+      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+      transition={{ duration: 0.8, delay, ease: [0.22, 1, 0.36, 1] }}
+      className="flex flex-col px-10 first:pl-0 last:pr-0"
+    >
+      {/* Large counter number */}
+      <span
+        className="font-serif font-light leading-none tracking-[-0.02em] text-[#0f395c]"
+        style={{ fontSize: 'clamp(48px, 5.5vw, 80px)' }}
+      >
+        {count}{suffix}
+      </span>
+
+      {/* Bold label */}
+      <span className="font-sans text-[14px] font-semibold tracking-[0.22em] uppercase text-[#0f395c] mt-3 leading-snug">
+        {label}
+      </span>
+
+      {/* Small caps sub */}
+      <span className="font-sans text-[12px] font-normal tracking-[0.3em] uppercase text-[#0f395c] mt-1">
+        {sub}
+      </span>
+    </motion.div>
+  );
+}
+
+/* ─────────────────────────────────────────
+   METRICS STRIP DATA
+───────────────────────────────────────── */
+const METRICS = [
   {
     id: 1,
-    num: '01',
-    icon: Compass,
-    title: 'Travertine Quarry',
-    description: 'Sourced directly from Tuscan valleys, every block of travertine is hand-selected representing centuries of structural integrity, organic patterning, and deep geological character.',
-    accentText: 'ITALIAN TRAVERTINE'
+    num: '30+',
+    label: 'YEARS OF EXPERIENCE IN',
+    sub: 'CONSTRUCTION INDUSTRY',
   },
   {
     id: 2,
-    num: '02',
-    icon: Sun,
-    title: 'Lumnis Aura Skylines',
-    description: 'Curated double-aspect elevations designed precisely with solar orientation in mind, capturing dynamic golden rays and diffuse light through performance sound-damped floor glazing.',
-    accentText: 'DOUBLE-ASPECT GLAZING'
+    num: '16+',
+    label: 'YEARS OF EXPERIENCE IN',
+    sub: 'REAL ESTATE DEVELOPMENT',
   },
   {
     id: 3,
-    num: '03',
-    icon: Layers,
-    title: 'Mivan Monoliths',
-    description: 'Constructed utilising continuous cast aluminium formwork grids that guarantee millimeter-precise jointing, high thermal isolation, and lifetime water-tight reassurance.',
-    accentText: 'ALUMINIUM MONOLITHIC CAST'
+    num: '1M+',
+    label: 'SQ. FT.',
+    sub: 'DELIVERED WITH PRECISION',
   },
   {
     id: 4,
-    num: '04',
-    icon: Wind,
-    title: 'Sanctuary Terraces',
-    description: 'Deep cantilevers sheltering private outdoor pocket gardens on alternating floor planes, pre-established with mature perimeter foliage and automated micro-drip irrigation.',
-    accentText: 'SELF-SUSTAINING PERIMETERS'
-  }
+    num: '250+',
+    label: 'FAMILIES',
+    sub: 'CURRENTLY IN RESIDENCE',
+  },
 ];
 
+/* ─────────────────────────────────────────
+   COMPONENT
+───────────────────────────────────────── */
 export default function GlassCardsSection() {
   return (
-    <section 
-      id="residence-highlights" 
-      className="relative w-full bg-[#faf8f4] py-24 md:py-32 px-6 sm:px-12 md:px-16 border-t border-warm-2 overflow-hidden z-20"
+    <section
+      id="why-continental"
+      className="relative w-full overflow-hidden z-20"
     >
-      {/* Absolute decorative high-contrast ambient gold & terracotta glow patterns to showcase refraction through the frosted glass */}
-      <div className="absolute top-[10%] left-[-15%] w-[45vw] h-[45vw] rounded-full bg-gradient-to-tr from-gold-a/20 to-amber-200/10 blur-[130px] pointer-events-none animate-pulse duration-[12s]" />
-      <div className="absolute bottom-[10%] right-[-15%] w-[50vw] h-[50vw] rounded-full bg-gradient-to-br from-gold-b/15 to-rose-200/10 blur-[160px] pointer-events-none animate-pulse duration-[16s]" />
-      <div className="absolute top-[45%] left-[25%] w-[25vw] h-[25vw] rounded-full bg-orange-100/15 blur-[100px] pointer-events-none" />
-      <div className="absolute top-[30%] right-[20%] w-[30vw] h-[30vw] rounded-full bg-amber-100/15 blur-[110px] pointer-events-none" />
+      {/* ══════════════════════════════════
+          GLASS CARDS
+      ══════════════════════════════════ */}
 
-      <div className="max-w-9xl mx-auto relative z-10">
-        
-        {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16 md:mb-24 select-none">
-          <div className="max-w-xl">
-            <div className="flex items-center gap-3 mb-6">
-              <span className="w-8 h-[1px] bg-brown-mid/30" />
-              <span className="text-[15px] font-sans text-brown-mid tracking-[0.2em] uppercase">
-                Structural Baseline
+      {/* ambient glow blobs */}
+      <div className="absolute top-[30%] left-[-10%] w-[40vw] h-[40vw] rounded-full bg-[#eec06b]/10 blur-[130px] pointer-events-none" />
+      <div className="absolute bottom-[10%] right-[-10%] w-[45vw] h-[45vw] rounded-full bg-[#0f395c]/5 blur-[140px] pointer-events-none" />
+
+      <div className="relative z-10 px-[60px] pt-[120px]">
+
+        {/* Section header */}
+        <div className="flex items-end justify-between mb-20">
+          <div>
+            {/* eyebrow */}
+            <div className="flex items-center gap-[14px] mb-5">
+              <span
+                className="block flex-shrink-0 w-9 h-px"
+                style={{ background: 'linear-gradient(90deg, #eec06b 0%, #ca8c19 100%)' }}
+              />
+              <span className="font-sans text-[10px] font-medium tracking-[0.4em] uppercase text-[#ca8c19]">
+                Why Continental
               </span>
             </div>
-            
-            <h2 className="font-serif text-4xl sm:text-5xl md:text-[54px] leading-[1.1] tracking-[0.02em] font-normal text-brown-deep uppercase">
-              The Artisan <br />
-              <span className="font-serif font-normal text-brown-mid">Core Values.</span>
+            <h2
+              className="font-serif text-[clamp(42px,5vw,62px)]
+            font-normal leading-[1.06] tracking-[0.005em]
+            text-[#352b2b] mb-12"
+              style={{ fontSize: 'clamp(40px, 4.8vw, 60px)' }}
+            >
+              What we build on.<br />
+              <em className="not-italic text-[#0f395c]">And what we don't compromise.</em>
             </h2>
           </div>
-          
-          <div className="max-w-md">
-            <p className="font-sans text-2xl text-brown-mid font-normal leading-relaxed tracking-wide select-text">
-              Every millimeter of Elyse represents a deliberate, high-contrast structural philosophy. We build single-site signatures where premium materials are the standard, never downplayed.
-            </p>
-          </div>
+
+          {/* <p className="font-sans text-[14.5px] font-light text-[#7a726a] leading-[1.95] max-w-sm text-right">
+            Four principles that have guided every Continental project since the first foundation was poured.
+          </p> */}
         </div>
-
-        {/* 4 Grid Columns of Glass morphed cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-          {CARDS_DATA.map((card, idx) => {
-            const IconComponent = card.icon;
-            
-            return (
-              <motion.div
-                key={card.id}
-                id={`glass-card-${card.id}`}
-                initial={{ opacity: 0, y: 70 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-10% 0px -5% 0px", amount: 0.1 }}
-                transition={{ 
-                  duration: 0.95, 
-                  delay: idx * 0.15, 
-                  ease: [0.16, 1, 0.3, 1] 
-                }}
-                whileHover={{ 
-                  y: -6, 
-                  boxShadow: '0 24px 50px rgba(139, 115, 85, 0.12)',
-                  backgroundColor: 'rgba(255, 255, 255, 0.45)',
-                  borderColor: 'rgba(255, 255, 255, 0.95)',
-                  transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] }
-                }}
-                className="relative flex flex-col justify-between p-8 min-h-[390px] rounded-[28px] bg-white/25 backdrop-blur-[24px] border border-white/65 shadow-[0_8px_32px_rgba(139,115,85,0.04)] hover:shadow-[0_24px_50px_rgba(139,115,85,0.12)] transition-all duration-500 overflow-hidden group hover:border-gold-mid/40"
-              >
-                {/* Frosted Shimmer Sheen effect overlay on hover */}
-                <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/10 to-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
-
-                {/* Decorative delicate gold edge highlight line on top */}
-                <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-gold-mid/0 to-transparent group-hover:via-gold-mid/40 transition-all duration-700" />
-
-                {/* Card Top: Numbering and Luxurious Micro Icon */}
-                <div className="relative z-10">
-                  <div className="flex justify-between items-center mb-10 select-none">
-                    <span className="font-serif text-[13px] text-brown-mid/60 tracking-wider font-normal">
-                      ({card.num})
-                    </span>
-                    <div className="p-2.5 rounded-full bg-white/75 backdrop-blur-md border border-white/60 text-brown-mid/80 group-hover:text-gold-b group-hover:border-gold-b/30 group-hover:bg-white/90 shadow-xs transition-all duration-300">
-                      <IconComponent size={16} />
-                    </div>
-                  </div>
-
-                  {/* Main Title & Descriptive Narrative */}
-                  <h3 className="font-serif text-[22px] sm:text-[24px] leading-tight text-brown-deep tracking-wide font-normal uppercase mb-4 group-hover:text-gold-b transition-colors duration-300">
-                    {card.title}
-                  </h3>
-                  
-                  <p className="font-sans text-[12px] text-brown-mid/85 font-normal leading-relaxed tracking-wide select-text">
-                    {card.description}
-                  </p>
-                </div>
-
-                {/* Card Footer: Subtle aesthetic indicator & hover link */}
-                <div className="relative z-10 mt-8 pt-5 border-t border-white/50 flex items-center justify-between select-none">
-                  <span className="font-sans text-[9px] text-brown-mid/60 tracking-widest font-semibold uppercase">
-                    {card.accentText}
-                  </span>
-                  
-                  <div className="w-6 h-6 rounded-full border border-brown-deep/10 bg-white/30 text-brown-mid flex items-center justify-center group-hover:bg-brown-deep group-hover:text-white group-hover:border-brown-deep transition-all duration-300">
-                    <ArrowUpRight size={10} className="group-hover:rotate-45 transition-transform duration-300" />
-                  </div>
-                </div>
-
-              </motion.div>
-            );
-          })}
+      <div className="w-full border-t border-b border-[#e0d5c4] px-[60px] py-12">
+        <div className="grid grid-cols-4 divide-x divide-[#e0d5c4]">
+          {METRICS.map((m, idx) => (
+            <MetricItem
+              key={m.id}
+              num={m.num}
+              label={m.label}
+              sub={m.sub}
+              delay={idx * 0.12}
+            />
+          ))}
         </div>
+      </div>
+
 
       </div>
     </section>

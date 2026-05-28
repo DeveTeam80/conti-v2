@@ -3,11 +3,11 @@ import { Suite } from './types';
 export const SUITES: Suite[] = [
   {
     id: 'lumiere',
-    menuLabel: 'LUMIÈRE DUPLEX',
+    menuLabel: 'About Us',
     heroImage: '/assets/images/elyse_house_hero_1779429540872.png',
-    title1: 'HOLISTIC LUXURY',
-    title2: 'IN PERFECT HARMONY',
-    description: 'Welcome to Elyse Residence, where timeless design, wellness-focused living and cultural enrichment converge in order to create an unparalleled sanctuary of elegance and serenity.',
+    title1: 'PREMIUM HOMES',
+    title2: 'IN MAZGAON',
+    description: 'Continental Group has been building premium residential projects in Mumbai for over two decades. Our homes are designed around the values, lifestyle, and needs of our community, with every detail planned to reflect the way we live.',
     location: 'LEVELS 04 – 05',
     orientation: 'NORTH-EAST SKYLINE',
     ceilingHeight: '6.4 METERS (DOUBLE HIGH)',
@@ -52,7 +52,7 @@ export const SUITES: Suite[] = [
   },
   {
     id: 'penthouse',
-    menuLabel: 'CROWN PENTHOUSE',
+    menuLabel: 'Continental Heights',
     heroImage: '/assets/images/elyse_penthouse_1779429579656.png',
     title1: 'SKYLINE SANCTUARY',
     title2: 'ABOVE THE METROPOLIS',
@@ -101,7 +101,56 @@ export const SUITES: Suite[] = [
   },
   {
     id: 'aurelia',
-    menuLabel: 'AURELIA SUITES',
+    menuLabel: 'Continental Horizon',
+    heroImage: '/assets/images/elyse_suites_1779429601103.png',
+    title1: 'QUIET GRANDEUR',
+    title2: 'INTIMATE RETREAT COMFORT',
+    description: 'A masterpiece of master-crafted materials, the Aurelia Suites are beautifully detailed with imported Arabescato marble, custom raw silk structural partitions, and majestic volcanic fireplaces, flowing seamlessly out to private landscaped Japanese gardens.',
+    location: 'LEVELS 01 – 03',
+    orientation: 'SOUTH-WEST SUNSET',
+    ceilingHeight: '4.8 METERS',
+    specifications: [
+      { label: 'RESIDENCE AREA', value: '5,100 SQ FT' },
+      { label: 'BEDROOM SUITES', value: '3 CHAMBERS' },
+      { label: 'OUTDOOR SPACE', value: 'JAPANESE ZEN GARDEN' },
+      { label: 'EXCLUSIVE ACCESS', value: '24/7 STEWARD COURIER' },
+    ],
+    materials: [
+      {
+        name: 'Arabescato Vagli Marble',
+        category: 'Hearths & Countertops',
+        description: 'Premium Italian marble with swirling dark gray and sage green breccia-like patterns over snowy backgrounds.',
+        colorHex: '#EAEBEB'
+      },
+      {
+        name: 'Hand-woven Raw Silk',
+        category: 'Sliding Panels',
+        description: 'Screens created from untreated organic silk fibers that soften and warm incoming sunlight beautifully.',
+        colorHex: '#ECE3D5'
+      },
+      {
+        name: 'Honed Basalt Slabs',
+        category: 'Spa floors',
+        description: 'Smooth volcanic stones that conduct underfloor radiant heating and emit a restorative mineral scent when wet.',
+        colorHex: '#42454A'
+      },
+      {
+        name: 'Oxidized Bronze Trim',
+        category: 'Fixtures',
+        description: 'Solid brass hand-treated to accelerate beautiful green-blue chemical patination for archival character.',
+        colorHex: '#8C775D'
+      }
+    ],
+    amenities: [
+      { name: 'Japanese Gardens', desc: 'Fully landscaped private moss gardens featuring bespoke dry stone riverbeds and imported maples.', iconName: 'Home' },
+      { name: 'Volcanic Fireplaces', desc: 'Suspended bio-ethanol steel-hood open fireplaces radiating safe, elegant warmth.', iconName: 'Sparkles' },
+      { name: '24/7 Dedicated Butler', desc: 'A professional estate steward assigned exclusively to manage all your suite requirements.', iconName: 'Award' },
+      { name: 'Private Wine Vault', desc: 'A climate and humidity stabilized solid-oak cabinet containing capacity for 144 bottles.', iconName: 'Layers' }
+    ]
+  },
+  {
+    id: 'aurelia',
+    menuLabel: 'Life At Continental',
     heroImage: '/assets/images/elyse_suites_1779429601103.png',
     title1: 'QUIET GRANDEUR',
     title2: 'INTIMATE RETREAT COMFORT',

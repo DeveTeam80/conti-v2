@@ -16,10 +16,14 @@ const PATHS: { d: string }[] = [
     { d: "m 1048.4328,1047.0 c 12.9807,-11.5513 22.009,-20.4818 74.0958,-73.29348 33.4601,-33.92574 46.0833,-46.86638 57.1313,-58.56804 59.1149,-62.61273 92.8637,-108.72473 104.4365,-142.69463 4.0632,-11.92655 7.7947,-30.64194 9.4775,-47.53426 0.7036,-7.06314 0.9683,-24.23883 0.4812,-31.23016 -2.8793,-41.33133 -18.6087,-77.15616 -50.5597,-115.15372 -15.2499,-18.13589 -30.2249,-33.11009 -67.7026,-67.69884 -27.1951,-25.09879 -30.6892,-28.4419 -66.56,-63.68288 -29.9418,-29.4161 -39.1975,-38.28136 -52.8,-50.57259 -8.7055,-7.8663 -20.2074,-17.74175 -28.085,-24.11365 l -1.5251,-1.23356 0.085,38.56762 0.085,38.56762 1.5255,3.0124 c 4.6523,9.18678 19.5376,25.23731 45.4446,49.00177 13.2612,12.16447 25.6909,23.10843 54.6299,48.09984 24.8007,21.41757 25.7785,22.30033 35.36,31.9209 38.5728,38.73014 61.1228,75.68502 67.4857,110.59525 1.5752,8.64252 1.9275,12.69878 1.9318,22.24 0,6.64874 -0.1425,10.1569 -0.5642,13.6 -1.4916,12.1793 -4.6732,24.08483 -9.5156,35.60732 -3.829,9.11125 -12.1689,24.26038 -15.3691,27.91741 -0.8169,0.93355 -37.468,39.96503 -81.4469,86.73662 -43.9789,46.77159 -80.0638,85.20939 -80.1887,85.41733 -0.4647,0.77396 -2.1709,7.17383 -2.9436,11.04132 -1.1757,5.88423 -1.7488,10.83646 -2.1561,18.63141 -0.5217,9.9837 0.019,20.797 2.2772,45.5286 0.3375,3.696 0.7124,8.0541 0.8332,9.6846 0.1975,2.666 0.2718,2.9246 0.738,2.5666 0.2851,-0.2189 1.8143,-1.5512 3.3983,-2.9608 z" },
 ];
 
+interface PreloaderProps {
+  onComplete: () => void;
+}
+
 const DRAW_DURATION = 0.88;
 const STAGGER = 0.22;
 
-export default function Preloader() {
+export default function Preloader({ onComplete }: PreloaderProps) {
     const [phase, setPhase] = useState<"loading" | "complete" | "exit">("loading");
     const [svgX, setSvgX] = useState(-24);
     const [svgY, setSvgY] = useState(55);
@@ -45,31 +49,33 @@ export default function Preloader() {
         function ease(t: number) {
             return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
         }
-
-        function tick(now: number) {
-            const raw = Math.min((now - start) / DURATION, 1);
-            if (raw < 1) {
-                rafRef.current = requestAnimationFrame(tick);
-            } else {
-                if (DEV_MODE) return;
-                setPhase("complete");
-                setTimeout(() => {
-                    setPhase("exit");
-                    setTimeout(() => { document.body.style.overflow = ""; }, 1400);
-                }, 900);
-            }
-        }
-
-        const t = setTimeout(() => {
-            rafRef.current = requestAnimationFrame(tick);
-        }, 3800);
-
-        return () => {
-            clearTimeout(t);
-            cancelAnimationFrame(rafRef.current);
+function tick(now: number) {
+      const raw = Math.min((now - start) / DURATION, 1);
+      if (raw < 1) {
+        rafRef.current = requestAnimationFrame(tick);
+      } else {
+        setPhase("complete");
+        // Trigger the exit phase after a short delay
+        setTimeout(() => {
+          setPhase("exit");
+          setTimeout(() => {
             document.body.style.overflow = "";
-        };
-    }, []);
+            onComplete();
+          }, 1400); // Matches CSS exit animation duration
+        }, 900);
+      }
+    }
+
+    const t = setTimeout(() => {
+      rafRef.current = requestAnimationFrame(tick);
+    }, 500);
+
+    return () => {
+      clearTimeout(t);
+      cancelAnimationFrame(rafRef.current);
+      document.body.style.overflow = "";
+    };
+  }, [onComplete]);
 
     if (phase === "exit") return null;
 
@@ -250,9 +256,9 @@ export default function Preloader() {
                         lineHeight: 1,
                         whiteSpace: "nowrap",
                     }}>
-                        Continental
+                        Continental Group
                     </div>
-                    <div style={{
+                    {/* <div style={{
                         fontFamily: "'STIX Two Text', 'Cormorant Garamond', Georgia, serif",
                         fontSize: "clamp(10px, 1.8vw, 24px)",
                         fontWeight: 400,
@@ -263,7 +269,7 @@ export default function Preloader() {
                         whiteSpace: "nowrap",
                     }}>
                         Group
-                    </div>
+                    </div> */}
                 </div>
             </div>
 
