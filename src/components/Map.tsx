@@ -136,42 +136,14 @@ const InteractiveMap: React.FC = () => {
   return (
     <section
       ref={sectionRef}
-      className="relative bg-brown-deep py-12 md:py-20 overflow-hidden"
+      className="relative bg-brown-deep w-full h-full overflow-hidden"
     >
-      <div className="max-w-9xl mx-auto px-6 mb-8 md:mb-12">
-        <Reveal>
-          <motion.div
-            style={{ y: isMobile ? 0 : textY }}
-            className="text-center relative z-0"
-          >
-            <h2 className="text-5xl md:text-[7vw] leading-tight mb-4 text-gradient-gold uppercase font-serif">
-              The Privilege <br />
-              of Address
-            </h2>
-          </motion.div>
-        </Reveal>
-
-        <div className="relative mt-6 md:mt-10">
-          <div className="w-full">
-            <Reveal delay={0.2}>
-              <p className="text-lg md:text-2xl font-normal font-sans leading-relaxed mb-4 md:mb-8 text-warm-1/80">
-                Located in the heart of Mazgaon, Continental Heights places you
-                within a setting where heritage, connectivity, and everyday life
-                come together seamlessly. With essential places, familiar
-                surroundings, and meaningful connections always within reach,
-                life here feels centered, balanced, and complete.
-              </p>
-            </Reveal>
-          </div>
-          <div className="clear-both" />
-        </div>
-      </div>
-
       {/* Main Container */}
-      <div className="relative flex flex-col md:flex-row w-full h-[90vh] md:h-screen bg-brown-deep overflow-hidden md:overflow-visible">
-        {/* DESKTOP Sidebar */}
-        <div className="hidden md:flex w-full md:w-80 h-full p-10 z-30 flex-col justify-center bg-brown-deep/90 backdrop-blur-md">
-          <div className="space-y-4">
+      <div className="relative flex flex-col md:flex-row w-full h-full bg-brown-deep overflow-hidden">
+        
+        {/* DESKTOP Sidebar — Fixed left clipping padding and optimized sizing bounds */}
+        <div className="hidden md:flex w-[340px] xl:w-[380px] h-full pl-12 pr-8 py-10 z-30 flex-col justify-center bg-brown-deep/95 backdrop-blur-md border-r border-white/5 box-border flex-shrink-0">
+          <div className="space-y-5">
             {LOCATIONS.map((loc) => {
               const isBrandProperty =
                 loc.id === "continental-heights" ||
@@ -185,10 +157,10 @@ const InteractiveMap: React.FC = () => {
                   className="cursor-pointer group relative"
                 >
                   <span
-                    className={`text-xl md:text-2xl font-normal tracking-tight font-serif transition-all duration-300 block
+                    className={`text-xl xl:text-2xl font-normal tracking-tight font-serif transition-all duration-300 block origin-left
                       ${
                         activeId === loc.id || isBrandProperty
-                          ? "text-gradient-gold translate-x-4"
+                          ? "text-gradient-gold translate-x-3"
                           : "text-offWhite hover:text-gold-a"
                       }`}
                   >
@@ -201,8 +173,8 @@ const InteractiveMap: React.FC = () => {
         </div>
 
         {/* Map Area Wrapper */}
-        <div className="relative flex-1 h-full overflow-visible">
-          <div className="absolute inset-0 z-10 overflow-hidden">
+        <div className="relative flex-1 h-full min-w-0 overflow-hidden">
+          <div className="absolute inset-0 z-10">
             <img
               src="/assets/images/map.jpeg"
               className="w-full h-full object-cover grayscale contrast-125 mix-blend-luminosity opacity-85"
@@ -219,10 +191,9 @@ const InteractiveMap: React.FC = () => {
                 loc.id === "continental-heights" ||
                 loc.id === "continental-horizon";
 
-              // Handle distinct inner logos safely depending on property reference
               const logoSrc =
                 loc.id === "continental-horizon"
-                  ? "/assets/images/horizon/horizon-logo-2.png" // Update template path if unique asset filename differs
+                  ? "/assets/images/horizon/horizon-logo-2.png"
                   : "/assets/images/heights/heights-logo-golden.png";
 
               return (

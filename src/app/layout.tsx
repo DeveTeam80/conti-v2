@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Preloader from "@/components/Preloader";
+import PreloaderProvider from "@/components/PreloaderProvider";
 
 export const metadata: Metadata = {
   title: "Continental Group | Premium Luxury Real Estate Developer",
@@ -16,8 +16,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Preloader />
-        {children}
+        {/* The provider encapsulates the preloader and shares structural state downward */}
+        <PreloaderProvider>
+          {children}
+        </PreloaderProvider>
       </body>
     </html>
   );

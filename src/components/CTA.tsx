@@ -65,7 +65,7 @@ className="w-full h-full object-contain scale-[1.15]"
             w-44 h-44
             md:w-64 md:h-64
             rounded-full
-            bg-gradient-gold
+            bg-gold-grad
             text-secondary
             flex flex-col items-center justify-center
             shadow-xl
@@ -73,7 +73,7 @@ className="w-full h-full object-contain scale-[1.15]"
             overflow-hidden
           "
           >
-            <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+<div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-r from-[#eec06b] to-[#ca8c19]" />
             <span className="relative z-10 text-center px-4 text-2xl md:text-base">
               Request a <br />
               Private Preview
