@@ -49,16 +49,16 @@ export default function Preloader({ onComplete }: PreloaderProps) {
   const pathRefs = useRef<(SVGPathElement | null)[]>([]);
   const rafRef = useRef<number>(0);
   const [isExiting, setIsExiting] = useState(false);
-const [ready, setReady] = useState(false);
+  const [ready, setReady] = useState(false);
 
-useLayoutEffect(() => {
-  pathRefs.current.forEach((el) => {
-    if (!el) return;
-    const len = el.getTotalLength();
-    el.style.setProperty("--len", `${len}px`);
-  });
-  setReady(true);
-}, []);
+  useLayoutEffect(() => {
+    pathRefs.current.forEach((el) => {
+      if (!el) return;
+      const len = el.getTotalLength();
+      el.style.setProperty("--len", `${len}px`);
+    });
+    setReady(true);
+  }, []);
 
   useEffect(() => {
     // document.body.style.overflow = "hidden";
@@ -343,17 +343,19 @@ useLayoutEffect(() => {
                 const delay = 0.3 + i * STAGGER;
                 return (
                   <path
-  key={i}
-  ref={(el) => (pathRefs.current[i] = el)}
-  className={ready ? "path-el is-drawing" : "path-el"}
-  d={p.d}
-  fill="none"
-  stroke="url(#navyGrad)"
-  strokeWidth={18}
-  strokeLinecap="round"
-  strokeLinejoin="round"
-  style={{ animationDelay: `${delay}s` }}
-/>
+                    key={i}
+                    ref={(el) => {
+                      pathRefs.current[i] = el;
+                    }}
+                    className={ready ? "path-el is-drawing" : "path-el"}
+                    d={p.d}
+                    fill="none"
+                    stroke="url(#navyGrad)"
+                    strokeWidth={18}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    style={{ animationDelay: `${delay}s` }}
+                  />
                 );
               })}
             </g>
