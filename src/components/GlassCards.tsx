@@ -63,19 +63,19 @@ function MetricItem({ num, label, sub, delay }: MetricProps) {
     >
       {/* Large counter number */}
       <span
-        className="font-serif font-light leading-none tracking-[-0.02em] text-[#0f395c]"
+        className="font-light leading-none tracking-[-0.02em] text-[#0f395c]"
         style={{ fontSize: 'clamp(48px, 5.5vw, 80px)' }}
       >
         {count}{suffix}
       </span>
 
       {/* Bold label */}
-      <span className="font-sans text-[14px] font-semibold tracking-[0.22em] uppercase text-[#0f395c] mt-3 leading-snug">
+      <span className="text-[14px] font-semibold tracking-[0.22em] uppercase text-[#0f395c] mt-3 leading-snug">
         {label}
       </span>
 
       {/* Small caps sub */}
-      <span className="font-sans text-[12px] font-normal tracking-[0.3em] uppercase text-[#0f395c] mt-1">
+      <span className="text-[12px] font-normal tracking-[0.3em] uppercase text-[#0f395c] mt-1">
         {sub}
       </span>
     </motion.div>
@@ -136,11 +136,7 @@ export default function GlassCardsSection() {
           <div>
             {/* eyebrow */}
             <div className="flex items-center gap-[14px] mb-5">
-              <span
-                className="block flex-shrink-0 w-9 h-px"
-                style={{ background: 'linear-gradient(90deg, #eec06b 0%, #ca8c19 100%)' }}
-              />
-              <span className="font-sans text-[10px] font-medium tracking-[0.4em] uppercase text-[#ca8c19]">
+          <span className="font-sans text-[12px] font-medium tracking-[0.4em] uppercase text-[#ca8c19] border border-[#ca8c19] rounded-full py-2 px-3">
                 Why Continental
               </span>
             </div>
@@ -150,8 +146,8 @@ export default function GlassCardsSection() {
             text-[#352b2b] mb-12"
               style={{ fontSize: 'clamp(40px, 4.8vw, 60px)' }}
             >
-              What we build on.<br />
-              <em className="not-italic text-[#0f395c]">And what we don't compromise.</em>
+              Built with foresight.<br />
+              <em className="not-italic text-[#0f395c]">Measured in more than just years.</em>
             </h2>
           </div>
 

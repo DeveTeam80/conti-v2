@@ -224,16 +224,16 @@ const CenterText: React.FC<{ progress: MotionValue<number> }> = ({
         style={{ opacity, scale, y }}
         className="hidden md:flex absolute inset-0 z-20 flex-col items-center justify-center pointer-events-none px-6"
       >
-        <span className="text-gradient-gold uppercase tracking-[0.25em] text-[10px] sm:text-xs font-medium mb-4 sm:mb-6">
+        <span className="text-gradient-gold uppercase tracking-[0.25em] text-xl font-medium mb-4">
           The Neighbourhood
         </span>
         <h2 className="text-art-deco text-[13vw] md:text-[10vw] lg:text-9xl text-gradient-gold drop-shadow-lg py-2 sm:py-4 text-center">
           Mazgaon.
         </h2>
-        <p className="mt-1 text-art-deco text-[7vw] md:text-[5vw] lg:text-5xl text-gradient-gold/60 py-2 sm:py-3">
+        <p className="mt-1 text-art-deco text-[10vw] md:text-[6vw] lg:text-8xl text-gradient-gold/60 py-2 sm:py-3">
           The Heart.
         </p>
-        <p className="mt-4 sm:mt-6 text-gradient-gold/50 text-sm md:text-base tracking-wide font-light uppercase">
+        <p className="mt-4 sm:mt-6 text-gradient-gold/50 text-base md:text-xl tracking-wide font-light uppercase">
           Where everyday life remains connected, familiar, and complete.
         </p>
       </motion.div>

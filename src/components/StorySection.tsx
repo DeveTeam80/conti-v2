@@ -15,6 +15,7 @@ interface PanelData {
   italicHeading: string;
   paragraphs: string[];
   quote: string;
+  position: string;
 }
 
 const STORY_PANELS: PanelData[] = [
@@ -22,7 +23,7 @@ const STORY_PANELS: PanelData[] = [
     id: 0,
     num: "01",
     tabLabel: "The Beginning",
-    image: "/assets/images/heights/heights-2.jpeg",
+    image: "/assets/images/how-we-build.png",
     heading: "Twenty years in the trade.",
     italicHeading: "Eight in our own name.",
     paragraphs: [
@@ -30,6 +31,7 @@ const STORY_PANELS: PanelData[] = [
       "Eight years ago, we started developing premium residential projects under our own name. That long apprenticeship is the reason we don't cut corners. We have spent two decades watching what happens when builders do.",
     ],
     quote: "We are builders first. Developers second.",
+    position: "center",
   },
   {
     id: 1,
@@ -43,12 +45,13 @@ const STORY_PANELS: PanelData[] = [
       "Our buildings are on R.B. Marg, within walking distance of Jamali Masjid, 12 minutes from Raudat Tahera, 10 from Saifee Hospital. We build here because this is where our community lives.",
     ],
     quote: "We don't build where the market is. We build where we belong.",
+    position: "top",
   },
   {
     id: 2,
     num: "03",
     tabLabel: "How We Build",
-    image: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1200&q=80",
+    image: "/assets/images/how-we-build.jpeg",
     heading: "No joint development.",
     italicHeading: "No shortcuts.",
     paragraphs: [
@@ -56,6 +59,7 @@ const STORY_PANELS: PanelData[] = [
       "We use Mivan aluminium formwork construction, keep density low, and apply the same quality fittings on every floor. The premium is the baseline, not reserved for the top floors.",
     ],
     quote: "Self-owned land. Proven delivery. No compromises.",
+    position: "right",
   },
   {
     id: 3,
@@ -69,6 +73,7 @@ const STORY_PANELS: PanelData[] = [
       "We don't build more than we can build well. One project at a time, finished before the next begins. That is the Continental Group way.",
     ],
     quote: "Quality is not a feature. It is the standard we start from.",
+    position: "right",
   },
 ];
 
@@ -96,11 +101,7 @@ export default function StorySection() {
       <div className="sticky h-fit flex flex-col justify-start">
         {/* Eyebrow */}
         <div className="flex items-center gap-[14px] mb-5">
-          <span
-            className="block flex-shrink-0 w-9 h-px"
-            style={{ background: "linear-gradient(90deg, #eec06b 0%, #ca8c19 100%)" }}
-          />
-          <span className="font-sans text-[10px] font-medium tracking-[0.4em] uppercase text-[#ca8c19]">
+          <span className="font-sans text-[12px] font-medium tracking-[0.4em] uppercase text-[#ca8c19] border border-[#ca8c19] rounded-full py-2 px-3">
             Our Story
           </span>
         </div>
@@ -110,12 +111,11 @@ export default function StorySection() {
           className="
             font-serif text-[clamp(42px,5vw,62px)]
             font-normal leading-[1.06] tracking-[0.005em]
-            text-[#352b2b] mb-12
+            text-[#352b2b] mb-6
           "
         >
-          Who we are.
-          <br />
-          <em className="not-italic text-[#0f395c]">How we build.</em>
+          Two Decades of Craft.
+          {/* <em className="not-italic text-[#0f395c]">The Continental Way.</em> */}
         </h2>
 
         {/* Tabs */}
@@ -130,9 +130,10 @@ export default function StorySection() {
                   px-6 py-5 cursor-pointer
                   text-left outline-none
                   border-l-2 transition-all duration-300
-                  ${isActive
-                    ? "bg-[#f4ede2] border-l-[#ca8c19]"
-                    : "bg-transparent border-l-transparent hover:bg-[#f4ede2]"
+                  ${
+                    isActive
+                      ? "bg-[#f4ede2] border-l-[#ca8c19]"
+                      : "bg-transparent border-l-transparent hover:bg-[#f4ede2]"
                   }
                 `}
               >
@@ -178,7 +179,6 @@ export default function StorySection() {
           >
             {/* Added items-start here to ensure text and image share an immediate top boundary */}
             <div className="flex flex-row gap-10 items-start w-full">
-              
               {/* Image — right-to-left clip reveal, portrait aspect */}
               <div className="relative w-full aspect-[3/4] overflow-hidden flex-shrink-0 basis-[45%]">
                 <motion.img
@@ -186,12 +186,13 @@ export default function StorySection() {
                   src={panel.image}
                   alt={panel.tabLabel}
                   referrerPolicy="no-referrer"
-                  className="w-full h-full object-cover block object-right"
+                  // Dynamic class using a template literal
+                  className={`w-full h-full object-cover block object-${panel.position}`}
                   initial={{ clipPath: "inset(0 100% 0 0)", scale: 1.06 }}
                   animate={{ clipPath: "inset(0 0% 0 0)", scale: 1 }}
                   transition={{
                     clipPath: { duration: 1.2, ease: [0.76, 0, 0.24, 1] },
-                    scale:   { duration: 1.4, ease: [0.22, 1, 0.36, 1] },
+                    scale: { duration: 1.4, ease: [0.22, 1, 0.36, 1] },
                   }}
                 />
                 {/* ambient veil */}
@@ -208,7 +209,7 @@ export default function StorySection() {
                     text-[#352b2b] mb-6
                   "
                 >
-                  {panel.heading} <br/>
+                  {panel.heading} <br />
                   <em className="text-[#0f395c]">{panel.italicHeading}</em>
                 </h3>
 
@@ -240,7 +241,6 @@ export default function StorySection() {
                   {panel.quote}
                 </blockquote>
               </div>
-
             </div>
           </motion.div>
         </AnimatePresence>

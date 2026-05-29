@@ -14,9 +14,9 @@ export default function VisionSection() {
         {/* LEFT COLUMN: The luxury design interior image */}
         <div className="relative w-full h-[320px] md:h-auto overflow-hidden">
           <img
-            src="/assets/images/heights/heights-1.jpeg"
+            src="/assets/images/how-we-build.png"
             alt="Warm elegant living interior"
-            className="w-full h-full object-cover object-right"
+            className="w-full h-full object-cover object-center"
             referrerPolicy="no-referrer"
           />
           {/* Subtle vignette/shading changed to warm light tone overlay to keep background pristine */}
@@ -25,22 +25,30 @@ export default function VisionSection() {
 
         {/* RIGHT COLUMN: Sleek Editorial white background */}
         <div className="relative w-full bg-white flex flex-col p-8 sm:p-12 md:p-16 lg:p-24 z-10 min-h-[220px] md:min-h-0">
-          {/* SMALL PARAGRAPH OF DESCRIPTION IN LOWER RIGHT */}
+          {/* SMALL PARAGRAPH OF DESCRIPTION & CTA IN LOWER RIGHT */}
           <div className="mt-auto max-w-xs md:max-w-sm xl:max-w-3xl mx-auto select-text">
             <AnimateReveal delay={0.2} duration={1.2}>
-              <p className="text-brown-mid text-2xl sm:text-2xl font-normal leading-relaxed tracking-wide text-left sm:text-left select-text">
+              <p className="text-brown-deep text-2xl sm:text-2xl font-normal leading-relaxed tracking-wide text-left sm:text-left select-text">
                 South Mumbai's most respected address for our community. 55
                 floors, 500+ families, and every amenity planned around the way
                 we live, from the Namaz hall to the thaal space to separate
-                pools for men and women. Floors 45 to 55 are now open for sale.
+                pools for men and women. Premium units on floors 45 to 55 are now exclusively available for purchase.
               </p>
+              
+              {/* CTA BUTTON */}
+              <button 
+                className="mt-8 px-8 py-4 border border-brown-deep text-brown-deep uppercase tracking-widest text-sm font-semibold hover:bg-brown-deep hover:text-white transition-colors duration-300 cursor-pointer rounded-2xl"
+                onClick={() => console.log("Tour scheduled!")}
+              >
+                Schedule a Private Tour
+              </button>
             </AnimateReveal>
           </div>
         </div>
 
         {/* DECORATIVE OVERLAY HEADER: A VISION OF INSPIRED LIVING */}
         {/* Starts exactly at ~38% on desktop so it crosses the 50% split perfectly */}
-        <div className="absolute inset-x-0 top-[18%] md:top-[12%] lg:top-[15%] z-20 pointer-events-none select-none px-6 md:px-0 md:pl-[38%] lg:pl-[37%] xl:pl-[53%]">
+        <div className="absolute inset-x-0 top-[18%] md:top-[5%] z-20 pointer-events-none select-none px-6 md:px-0 md:pl-[38%] lg:pl-[37%] xl:pl-[53%]">
           <AnimateReveal duration={1.2}>
             <h2 className="text-5xl md:text-[5vw] leading-tight mb-4 text-gradient-gold uppercase font-serif">
               <span className="block font-normal">CONTINENTAL HEIGHTS DEFINED</span>
