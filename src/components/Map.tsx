@@ -8,7 +8,6 @@ import {
   AnimatePresence,
 } from "framer-motion";
 import { MapPin } from "lucide-react";
-import { Reveal } from "./Reveal";
 import { useSmooth } from "../hooks/useSmooth";
 
 interface Location {
@@ -59,7 +58,7 @@ const LOCATIONS: Location[] = [
     x: 35,
     y: 33,
     image: "/assets/images/horizon/horizon-reveal.jpeg",
-    description: "550m",
+    description: "550 m",
   },
   {
     id: "reay-road",
@@ -95,12 +94,14 @@ const LOCATIONS: Location[] = [
   },
 ];
 
+const BRAND_IDS = ["continental-heights", "continental-horizon"];
+const isBrand = (id: string) => BRAND_IDS.includes(id);
+
 const InteractiveMap: React.FC = () => {
   const [activeId, setActiveId] = useState<string | null>(null);
   const activeLocation = LOCATIONS.find((l) => l.id === activeId);
   const sectionRef = useRef<HTMLElement>(null);
 
-  // Mobile detection
   const [isMobile, setIsMobile] = useState(false);
   const carouselRef = useRef<HTMLDivElement>(null);
 
@@ -117,80 +118,112 @@ const InteractiveMap: React.FC = () => {
   });
 
   const smoothScroll = useSmooth(scrollYProgress, 0.09);
-  const textY = useTransform(smoothScroll, [0, 1], [100, -100]);
+  const headerY = useTransform(smoothScroll, [0, 1], [50, -50]);
 
   // Scroll mobile carousel to selected pin
   useEffect(() => {
     if (isMobile && activeId && carouselRef.current) {
       const activeElement = document.getElementById(`card-${activeId}`);
-      if (activeElement) {
-        activeElement.scrollIntoView({
-          behavior: "smooth",
-          block: "nearest",
-          inline: "center",
-        });
-      }
+      activeElement?.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+        inline: "center",
+      });
     }
   }, [activeId, isMobile]);
+
+  // Smart placement so preview cards never clip off the top / left edges
+  const placement = activeLocation
+    ? { below: activeLocation.y < 34, left: activeLocation.x < 22 }
+    : null;
 
   return (
     <section
       ref={sectionRef}
-      className="relative bg-brown-deep w-full h-full overflow-hidden"
+      className="relative h-full w-full overflow-hidden bg-brown-deep"
     >
-      {/* Main Container */}
-      <div className="relative flex flex-col md:flex-row w-full h-full bg-brown-deep overflow-hidden">
-        
-        {/* DESKTOP Sidebar — Fixed left clipping padding and optimized sizing bounds */}
-        <div className="hidden md:flex w-[340px] xl:w-[380px] h-full pl-12 pr-8 py-10 z-30 flex-col justify-center bg-brown-deep/95 backdrop-blur-md border-r border-white/5 box-border flex-shrink-0">
-          <div className="space-y-5">
-            {LOCATIONS.map((loc) => {
-              const isBrandProperty =
-                loc.id === "continental-heights" ||
-                loc.id === "continental-horizon";
+      <div className="relative flex h-full w-full flex-col overflow-hidden bg-brown-deep md:flex-row">
+        {/* ───────────── DESKTOP SIDEBAR ───────────── */}
+        {/* <aside className="relative z-30 hidden h-full w-[360px] flex-shrink-0 flex-col justify-center border-r border-gold-a/10 bg-brown-deep/95 px-12 py-12 backdrop-blur-md box-border md:flex xl:w-[400px]">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_80%_at_0%_50%,rgba(202,140,25,0.07),transparent_60%)]" />
 
+          <motion.div style={{ y: headerY }} className="relative mb-9">
+            <span className="block font-sans text-[11px] font-semibold uppercase tracking-[0.32em] text-gold-a/80">
+              The Neighbourhood
+            </span>
+            <h2 className="mt-3 font-serif text-3xl font-normal leading-[1.08] text-offWhite xl:text-4xl">
+              Everything,
+              <span className="block text-gradient-gold">within reach</span>
+            </h2>
+            <div className="mt-5 h-px w-16 bg-gradient-to-r from-gold-a to-transparent" />
+          </motion.div>
+
+          <nav className="relative flex flex-col">
+            {LOCATIONS.map((loc) => {
+              const active = activeId === loc.id;
+              const brand = isBrand(loc.id);
               return (
-                <div
+                <button
                   key={loc.id}
+                  type="button"
                   onMouseEnter={() => setActiveId(loc.id)}
                   onMouseLeave={() => setActiveId(null)}
-                  className="cursor-pointer group relative"
+                  className="group relative flex items-baseline justify-between gap-4 border-b border-white/[0.05] py-3 text-left last:border-b-0"
                 >
+
                   <span
-                    className={`text-xl xl:text-2xl font-normal tracking-tight font-serif transition-all duration-300 block origin-left
-                      ${
-                        activeId === loc.id || isBrandProperty
-                          ? "text-gradient-gold translate-x-3"
-                          : "text-offWhite hover:text-gold-a"
+                    className={`absolute left-0 top-1/2 h-6 w-[2px] origin-center -translate-y-1/2 rounded-full bg-gold-a transition-all duration-300 ${
+                      active ? "scale-y-100 opacity-100" : "scale-y-0 opacity-0"
+                    }`}
+                  />
+                  <span className="flex items-center gap-2.5">
+                    {brand && (
+                      <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-gold-mid shadow-[0_0_8px_rgba(202,140,25,0.85)]" />
+                    )}
+                    <span
+                      className={`font-serif text-xl leading-tight tracking-tight transition-all duration-300 xl:text-[1.45rem] ${
+                        active || brand
+                          ? "translate-x-3 text-gradient-gold"
+                          : "text-offWhite/90 group-hover:translate-x-1.5 group-hover:text-gold-a"
                       }`}
-                  >
-                    {loc.name}
+                    >
+                      {loc.name}
+                    </span>
                   </span>
-                </div>
+                  <span
+                    className={`shrink-0 font-sans text-[11px] font-medium uppercase tracking-[0.18em] tabular-nums transition-colors duration-300 ${
+                      active || brand ? "text-gold-a/90" : "text-offWhite/35"
+                    }`}
+                  >
+                    {loc.description}
+                  </span>
+                </button>
               );
             })}
-          </div>
-        </div>
+          </nav>
+        </aside> */}
 
-        {/* Map Area Wrapper */}
-        <div className="relative flex-1 h-full min-w-0 overflow-hidden">
+        {/* ───────────── MAP AREA ───────────── */}
+        <div className="relative h-full min-w-0 flex-1 overflow-hidden">
           <div className="absolute inset-0 z-10">
             <img
               src="/assets/images/map.jpeg"
-              className="w-full h-full object-cover grayscale contrast-125 mix-blend-luminosity opacity-85"
-              alt="Map"
+              className="h-full w-full object-cover mix-blend-luminosity"
+              alt="Area map"
             />
-            <div className="absolute inset-0 opacity-[0.03] bg-[linear-gradient(to_right,#ffffff_1px,transparent_1px),linear-gradient(to_bottom,#ffffff_1px,transparent_1px)] bg-size-[60px_60px]" />
+            {/* <div className="absolute inset-0 bg-gradient-to-br from-brown-deep/30 via-transparent to-brown-deep/60 mix-blend-multiply" /> */}
+            {/* hairline grid */}
+            {/* <div className="absolute inset-0 opacity-[0.04] bg-[linear-gradient(to_right,#ffffff_1px,transparent_1px),linear-gradient(to_bottom,#ffffff_1px,transparent_1px)] bg-size-[64px_64px]" /> */}
+            {/* edge vignette */}
+            {/* <div className="absolute inset-0 bg-[radial-gradient(120%_120%_at_50%_50%,transparent_55%,rgba(28,20,14,0.55)_100%)]" />
+            <div className="absolute inset-y-0 left-0 hidden w-32 bg-gradient-to-r from-brown-deep/80 to-transparent md:block" /> */}
           </div>
 
-          {/* Pins Container */}
-          <div className="absolute inset-0 z-20">
+          {/* Pins */}
+          {/* <div className="absolute inset-0 z-20">
             {LOCATIONS.map((loc) => {
-              const isActive = activeId === loc.id;
-              const isBrandProperty =
-                loc.id === "continental-heights" ||
-                loc.id === "continental-horizon";
-
+              const active = activeId === loc.id;
+              const brand = isBrand(loc.id);
               const logoSrc =
                 loc.id === "continental-horizon"
                   ? "/assets/images/horizon/horizon-logo-2.png"
@@ -201,61 +234,78 @@ const InteractiveMap: React.FC = () => {
                   key={loc.id}
                   style={{ left: `${loc.x}%`, top: `${loc.y}%` }}
                   className={`absolute -translate-x-1/2 -translate-y-1/2 ${
-                    isBrandProperty ? "z-40" : "z-20"
+                    brand ? "z-40" : active ? "z-30" : "z-20"
                   }`}
                 >
                   <motion.div
-                    onClick={() => setActiveId(isActive ? null : loc.id)}
+                    onClick={() => setActiveId(active ? null : loc.id)}
                     onMouseEnter={() => !isMobile && setActiveId(loc.id)}
                     onMouseLeave={() => !isMobile && setActiveId(null)}
-                    animate={{ scale: isActive && !isBrandProperty ? 1.25 : 1 }}
-                    className="relative cursor-pointer transition-all duration-300 flex flex-col items-center justify-center"
+                    className="group relative flex cursor-pointer flex-col items-center justify-center"
                   >
-                    {isBrandProperty ? (
-                      <div className="relative flex flex-col items-center">
-                        <motion.div
-                          initial={{ scale: 1, opacity: 0.8 }}
-                          animate={{ scale: 2.5, opacity: 0 }}
-                          transition={{ repeat: Infinity, duration: 2 }}
-                          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-gold-mid pointer-events-none"
+                    {brand ? (
+                      <motion.div
+                        animate={{ y: [0, -6, 0] }}
+                        transition={{
+                          repeat: Infinity,
+                          duration: 3.4,
+                          ease: "easeInOut",
+                        }}
+                        className="relative flex flex-col items-center"
+                      >
+                        <div className="absolute left-1/2 top-1/2 h-16 w-16 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gold-mid/25 blur-xl" />
+                       
+                        <motion.span
+                          initial={{ scale: 1, opacity: 0.55 }}
+                          animate={{ scale: 2.4, opacity: 0 }}
+                          transition={{
+                            repeat: Infinity,
+                            duration: 2.4,
+                            ease: "easeOut",
+                          }}
+                          className="pointer-events-none absolute left-1/2 top-[22px] h-7 w-7 -translate-x-1/2 rounded-full bg-gold-mid"
                         />
                         <div className="relative z-10 flex items-center justify-center">
                           <MapPin
-                            size={isMobile ? 50 : 62}
-                            strokeWidth={1.5}
-                            className="text-brown-deep fill-brown-deep drop-shadow-2xl"
+                            size={isMobile ? 52 : 64}
+                            strokeWidth={1.25}
+                            className="text-brown-deep fill-brown-deep drop-shadow-[0_8px_16px_rgba(0,0,0,0.45)]"
                           />
-                          <div className="absolute top-[5px] md:top-[7px] w-8 h-8 md:w-10 md:h-10 rounded-full overflow-hidden bg-brown-deep">
+                          <div className="absolute top-[6px] h-9 w-9 -translate-y-px rounded-full ring-1 ring-gold-a/60 md:top-[8px] md:h-11 md:w-11" />
+                          <div className="absolute top-[7px] h-8 w-8 overflow-hidden rounded-full bg-brown-deep md:top-[9px] md:h-10 md:w-10">
                             <img
                               src={logoSrc}
-                              alt={`${loc.name} Logo`}
-                              className="w-full h-full object-contain p-0.5"
+                              alt={`${loc.name} logo`}
+                              className="h-full w-full object-contain p-0.5"
                             />
                           </div>
                         </div>
-                        <div className="absolute bottom-0 w-1.5 h-1.5 bg-gold-mid rounded-full blur-[1px]" />
-                      </div>
+                        <div className="-mt-1 h-1.5 w-1.5 rounded-full bg-gold-mid shadow-[0_0_8px_rgba(202,140,25,0.9)]" />
+                       
+                        <span className="mt-1.5 whitespace-nowrap rounded-full border border-gold-a/30 bg-brown-deep/85 px-2.5 py-0.5 font-sans text-[9px] font-semibold uppercase tracking-[0.18em] text-gold-a backdrop-blur-sm">
+                          {loc.name}
+                        </span>
+                      </motion.div>
                     ) : (
-                      <div
-                        className={`p-2 rounded-full flex items-center justify-center transition-colors ${
-                          isActive
-                            ? "bg-brown-deep text-gold-a shadow-xl border border-gold-a/30"
-                            : "text-brown-deep"
-                        }`}
-                      >
-                        {isActive && (
-                          <motion.div
-                            initial={{ scale: 1, opacity: 0.6 }}
-                            animate={{ scale: 2.2, opacity: 0 }}
-                            transition={{ repeat: Infinity, duration: 1.5 }}
-                            className="absolute inset-0 rounded-full bg-brown-deep"
+                      <div className="relative flex items-center justify-center">
+                        {active && (
+                          <motion.span
+                            initial={{ scale: 1, opacity: 0.5 }}
+                            animate={{ scale: 2.6, opacity: 0 }}
+                            transition={{
+                              repeat: Infinity,
+                              duration: 1.6,
+                              ease: "easeOut",
+                            }}
+                            className="pointer-events-none absolute h-5 w-5 rounded-full bg-gold-mid"
                           />
                         )}
-                        <MapPin
-                          size={isMobile ? 20 : 24}
-                          strokeWidth={2}
-                          fill={isActive ? "none" : "currentColor"}
-                          className="relative z-10"
+                        <span
+                          className={`relative z-10 block rounded-full ring-1 transition-all duration-300 ${
+                            active
+                              ? "h-3.5 w-3.5 bg-gold-a ring-gold-a/70 shadow-[0_0_12px_rgba(202,140,25,0.85)]"
+                              : "h-2.5 w-2.5 bg-offWhite/85 ring-white/40 group-hover:bg-gold-a group-hover:ring-gold-a/60"
+                          }`}
                         />
                       </div>
                     )}
@@ -263,83 +313,113 @@ const InteractiveMap: React.FC = () => {
                 </div>
               );
             })}
-          </div>
+          </div> */}
 
           {/* DESKTOP Preview Card */}
           {!isMobile && (
             <AnimatePresence>
-              {activeId && activeLocation && (
+              {activeId && activeLocation && placement && (
                 <motion.div
-                  initial={{ opacity: 0, y: 10 }}
+                  initial={{ opacity: 0, y: placement.below ? -8 : 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 10 }}
+                  exit={{ opacity: 0, y: placement.below ? -8 : 8 }}
+                  transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
                   style={{
                     left: `${activeLocation.x}%`,
                     top: `${activeLocation.y}%`,
                   }}
-                  className="absolute z-[100] w-64 -translate-x-1/2 -translate-y-[calc(100%+50px)] pointer-events-none"
+                  className={`pointer-events-none absolute z-[100] w-64 ${
+                    placement.left ? "" : "-translate-x-1/2"
+                  } ${
+                    placement.below
+                      ? "translate-y-[46px]"
+                      : "-translate-y-[calc(100%_+_46px)]"
+                  }`}
                 >
-                  <div className="bg-brown border border-warm-3/20 p-2 rounded-2xl shadow-2xl">
-                    <div className="aspect-video w-full rounded-xl overflow-hidden border border-warm-3/10">
+                  <div className="relative rounded-2xl border border-gold-a/20 bg-brown/95 p-2 shadow-[0_24px_60px_-12px_rgba(0,0,0,0.7)] backdrop-blur-md">
+                    {/* pointer */}
+                    <span
+                      className={`absolute h-3 w-3 rotate-45 bg-brown border-gold-a/20 ${
+                        placement.below
+                          ? "-top-1.5 border-l border-t"
+                          : "-bottom-1.5 border-b border-r"
+                      } ${placement.left ? "left-5" : "left-1/2 -translate-x-1/2"}`}
+                    />
+                    <div className="aspect-video w-full overflow-hidden rounded-xl border border-white/5">
                       <img
                         src={activeLocation.image}
-                        className="w-full h-full object-cover"
+                        className="h-full w-full object-cover"
                         alt={activeLocation.name}
                       />
                     </div>
-                    <div className="pt-3 pb-2 text-center">
-                      <p className="text-offWhite text-[10px] tracking-widest uppercase font-bold px-2 font-sans">
-                        {activeLocation.name} - {activeLocation.description}
+                    <div className="flex items-center justify-between gap-2 px-1.5 pb-1 pt-2.5">
+                      <p className="font-sans text-[10px] font-bold uppercase tracking-[0.18em] text-offWhite">
+                        {activeLocation.name}
                       </p>
+                      <span className="shrink-0 rounded-full bg-gold-a/15 px-2 py-0.5 font-sans text-[10px] font-bold tracking-wide text-gold-a">
+                        {activeLocation.description}
+                      </span>
                     </div>
                   </div>
-                  <div className="w-0 h-0 border-l-8 border-l-transparent border-r-8 border-r-transparent border-t-8 border-t-brown mx-auto" />
                 </motion.div>
               )}
             </AnimatePresence>
           )}
         </div>
 
-        {/* MOBILE Bottom Carousel */}
+        {/* ───────────── MOBILE CAROUSEL ───────────── */}
         {isMobile && (
-          <div
-            ref={carouselRef}
-            className="relative w-full shrink-0 z-20 flex overflow-x-auto snap-x snap-mandatory px-6 gap-4 py-6 bg-brown-deep [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
-          >
-            {LOCATIONS.map((loc) => {
-              const isBrandProperty =
-                loc.id === "continental-heights" ||
-                loc.id === "continental-horizon";
-
-              return (
-                <div
-                  id={`card-${loc.id}`}
-                  key={loc.id}
-                  onClick={() => setActiveId(loc.id)}
-                  className={`relative flex-shrink-0 w-[85%] max-w-[320px] snap-center rounded-2xl overflow-hidden aspect-[4/3] transition-all shadow-2xl border-2 ${
-                    activeId === loc.id || isBrandProperty
-                      ? "border-gold-mid scale-100 opacity-100"
-                      : "border-transparent scale-95 opacity-80"
-                  }`}
-                >
-                  <img
-                    src={loc.image}
-                    alt={loc.name}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-brown-deep/90 via-brown-deep/30 to-transparent pointer-events-none" />
-
-                  <div className="absolute bottom-4 left-4 right-4 flex justify-between items-end pointer-events-none">
-                    <h3 className="text-offWhite text-2xl font-semibold leading-tight drop-shadow-md font-serif">
-                      {loc.name}
-                    </h3>
-                    <span className="text-gradient-gold text-2xl font-bold bg-brown/90 px-2 py-1 rounded-md backdrop-blur-sm whitespace-nowrap ml-2 font-sans border border-warm-3/10">
-                      {loc.description}
-                    </span>
-                  </div>
-                </div>
-              );
-            })}
+          <div className="relative z-20 w-full shrink-0 bg-brown-deep">
+            <div className="flex items-center justify-between px-6 pb-1 pt-5">
+              <span className="font-sans text-[10px] font-semibold uppercase tracking-[0.28em] text-gold-a/80">
+                The Neighbourhood
+              </span>
+              <span className="font-sans text-[10px] uppercase tracking-widest text-offWhite/40">
+                {LOCATIONS.length} places
+              </span>
+            </div>
+            <div
+              ref={carouselRef}
+              className="flex snap-x snap-mandatory gap-4 overflow-x-auto px-6 py-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+            >
+              {LOCATIONS.map((loc) => {
+                const active = activeId === loc.id;
+                const brand = isBrand(loc.id);
+                return (
+                  <button
+                    id={`card-${loc.id}`}
+                    key={loc.id}
+                    type="button"
+                    onClick={() => setActiveId(loc.id)}
+                    className={`relative aspect-[4/3] w-[82%] max-w-[320px] shrink-0 snap-center overflow-hidden rounded-2xl border-2 text-left shadow-2xl transition-all duration-300 ${
+                      active || brand
+                        ? "border-gold-mid opacity-100 shadow-[0_12px_40px_-8px_rgba(202,140,25,0.35)]"
+                        : "border-white/5 opacity-80"
+                    }`}
+                  >
+                    <img
+                      src={loc.image}
+                      alt={loc.name}
+                      className="h-full w-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-brown-deep via-brown-deep/30 to-transparent" />
+                    {brand && (
+                      <span className="absolute left-3 top-3 rounded-full border border-gold-a/40 bg-brown-deep/70 px-2 py-0.5 font-sans text-[9px] font-bold uppercase tracking-[0.18em] text-gold-a backdrop-blur-sm">
+                        Continental
+                      </span>
+                    )}
+                    <div className="absolute inset-x-4 bottom-4 flex items-end justify-between gap-2">
+                      <h3 className="font-serif text-2xl font-semibold leading-tight text-offWhite drop-shadow-md">
+                        {loc.name}
+                      </h3>
+                      <span className="ml-2 shrink-0 whitespace-nowrap rounded-md border border-gold-a/20 bg-brown-deep/80 px-2 py-1 font-sans text-base font-bold text-gradient-gold backdrop-blur-sm">
+                        {loc.description}
+                      </span>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
           </div>
         )}
       </div>

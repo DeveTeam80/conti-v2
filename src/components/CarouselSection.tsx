@@ -17,34 +17,47 @@ const EniteoGallery: React.FC = () => {
     offset: ["start start", "end end"],
   });
 
-  useEffect(() => {
-    const calculateLayout = () => {
-      if (trackRef.current) {
-        const trackWidth = trackRef.current.scrollWidth;
-        const viewportWidth = window.innerWidth;
-        const viewportHeight = window.innerHeight;
-        
-        // 1. Calculate how many pixels the track needs to slide horizontally
-        const range = trackWidth - viewportWidth;
-        const finalRange = range > 0 ? range : 0;
-        setScrollRange(finalRange);
+useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
 
-        // 2. Dynamic Scroll Height Matching: 
-        // We set the vertical height of the container to be the viewport height 
-        // PLUS the exact horizontal scroll distance. This creates a perfect 1:1 pixel mapping.
-        if (finalRange > 0) {
-          setContainerHeight(`${viewportHeight + finalRange}px`);
-        }
+    const calculateLayout = () => {
+      const trackWidth = track.scrollWidth;
+      // Using clientWidth prevents the vertical scrollbar from breaking the math
+      const viewportWidth = document.documentElement.clientWidth; 
+      const viewportHeight = window.innerHeight;
+      
+      // 1. Calculate how many pixels the track needs to slide horizontally
+      const range = trackWidth - viewportWidth;
+      const finalRange = Math.max(0, range);
+      setScrollRange(finalRange);
+
+      // 2. Dynamic Scroll Height Matching
+      if (finalRange > 0) {
+        setContainerHeight(`${viewportHeight + finalRange}px`);
+      } else {
+        setContainerHeight("auto");
       }
+    };
+
+    // Run layout math immediately on mount
+    calculateLayout();
+
+    // Attach ResizeObserver to continuously monitor the track for layout shifts
+    // This perfectly catches when your CSS/Images finally expand the container
+    const resizeObserver = new ResizeObserver(() => {
+      calculateLayout();
+    });
+    
+    resizeObserver.observe(track);
+
+    // Re-run whenever window sizes shift
+    window.addEventListener("resize", calculateLayout);
+    return () => {
+      window.removeEventListener("resize", calculateLayout);
+      resizeObserver.disconnect();
     };
-
-    // Run layout math immediately on mount
-    calculateLayout();
-
-    // Re-run whenever window sizes shift or layout updates
-    window.addEventListener("resize", calculateLayout);
-    return () => window.removeEventListener("resize", calculateLayout);
-  }, []);
+  }, []);
 
   const smoothProgress = useSmooth(scrollYProgress, 0.07);
 
@@ -61,7 +74,7 @@ const EniteoGallery: React.FC = () => {
         {/* Title */}
         <div className="absolute top-6 left-6 md:top-10 md:left-10 z-10 text-gradient-gold mix-blend-difference pointer-events-none">
           <h2 className="text-5xl md:text-8xl font-light uppercase tracking-tighter font-decart">
-            Step Inside
+            Step Inside Continental Heights
           </h2>
         </div>
 

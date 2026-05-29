@@ -18,15 +18,15 @@ const SLIDES: Slide[] = [
     description:
       "The moment you step in, you know you are home. A double-height grand lobby, premium finishes, and a low-density building mean you are never waiting, for a lift, for space, or for quiet.",
     smallImage: "/assets/images/horizon/horizon-internal/Continental Horizon_Lobby_01.jpg",
-    largeImage: "/assets/images/horizon/amenities-gallery/grand-lobby.jpg",
+    largeImage: "/assets/images/horizon/horizon-internal/Continental Horizon_Lobby_02.jpg",
   },
   {
     id: "wellness",
     title: "WELLNESS\n& RECREATION",
     description:
       "Separate swimming pools for men and women, a fully equipped gym and yoga centre with independent timings, a games room, and a dedicated kids room, everything your family needs, planned with care.",
-    smallImage: "/assets/images/horizon/amenities-gallery/games-lounge-02.jpg",
-    largeImage: "https://continental-beige.vercel.app/_next/image?url=%2Fassets%2Fimages%2Fhorizon%2Famenities-gallery%2Fswimming-pool.jpg&w=3840&q=75&dpl=dpl_An5CAN5apjz5M9RDkG56jjLZFrHu",
+    smallImage: "/assets/images/horizon/amenities-gallery/amenities-2.png",
+    largeImage: "/assets/images/horizon/amenities-gallery/amenities-5.png",
   },
   {
     id: "home",
@@ -112,7 +112,7 @@ export default function AmenitiesSection() {
                       <h2 className="font-serif text-[7.5vw] md:text-[3vw] leading-[1.1] tracking-[0.03em] font-normal text-brown-deep uppercase whitespace-pre-line">
                         {activeSlide.title}
                       </h2>
-                      <p className="font-sans text-2xl text-brown-mid font-normal mt-5 sm:mt-6 leading-relaxed tracking-wide">
+                      <p className="font-sans text-2xl text-brown-deep font-normal mt-5 sm:mt-6 leading-relaxed tracking-wide">
                         {activeSlide.description}
                       </p>
                     </motion.div>
@@ -127,7 +127,7 @@ export default function AmenitiesSection() {
                       className={`text-lg font-mono tracking-widest transition-all duration-500 py-1 ${
                         currentIdx === idx
                           ? "text-brown-deep border-b border-brown-deep font-semibold"
-                          : "text-brown-mid/50"
+                          : "text-brown-deep/50"
                       }`}
                     >
                       0{idx + 1}
@@ -139,7 +139,7 @@ export default function AmenitiesSection() {
 
             {/* RIGHT IMAGES LAYER WITH SYNCED CROSS-FADE */}
             <div className="md:col-span-7 lg:col-span-8 relative flex items-center justify-center py-6">
-              <div className="relative w-full max-w-[620px] h-[340px] sm:h-[450px] md:h-[500px] lg:h-[530px] flex items-center">
+              <div className="relative w-full max-w-[720px] h-[340px] sm:h-[450px] md:h-[500px] lg:h-[530px] flex items-center">
                 
                 <AnimatePresence mode="wait">
                   <motion.div 
@@ -151,7 +151,7 @@ export default function AmenitiesSection() {
                     transition={{ duration: 0.6, ease: "easeInOut" }}
                   >
                     {/* Main Large Image */}
-                    <div className="absolute right-0 w-[68%] sm:w-[70%] md:w-[72%] h-full z-10 overflow-hidden border border-warm-2 shadow-xl">
+                    <div className="absolute right-0 w-[68%] sm:w-[70%] md:w-[85%] h-full z-10 overflow-hidden border border-warm-2 shadow-xl">
                       <motion.img
                         initial={{ scale: 1.05 }}
                         animate={{ scale: 1 }}
@@ -163,7 +163,7 @@ export default function AmenitiesSection() {
                     </div>
 
                     {/* Secondary Small Overlap Image */}
-                    <div className="absolute left-[2%] sm:left-[5%] md:left-[8%] w-[38%] h-[74%] z-20 shadow-xl overflow-hidden bg-warm-1 border border-warm-2">
+                    <div className="absolute left-[2%] sm:left-[5%] md:left-[-17%] w-[38%] h-[74%] z-20 shadow-xl overflow-hidden bg-warm-1 border border-warm-2">
                       <motion.img
                         initial={{ y: 20, scale: 1.05 }}
                         animate={{ y: 0, scale: 1 }}

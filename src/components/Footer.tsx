@@ -3,7 +3,7 @@ import Image from "next/image";
 
 function Footer() {
   return (
-    <footer className="bg-brown-deep text-warm-1 py-8 md:py-10 border-t border-brown-mid/30 font-sans">
+    <footer className="bg-brown-deep text-warm-1 py-8 md:py-10 border-t border-brown-deep/30 font-sans">
       <div className="w-max-8xl mx-auto px-6 lg:px-12 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
         {/* Brand Logo & Description */}
         <div className="col-span-1">
@@ -119,7 +119,7 @@ function Footer() {
       </div>
 
       {/* Bottom Bar */}
-      <div className="w-max-8xl mx-auto px-6 lg:px-12 mt-8 pt-6 border-t border-brown-mid/20 flex flex-col lg:flex-row justify-between items-center gap-4">
+      <div className="w-max-8xl mx-auto px-6 lg:px-12 mt-8 pt-6 border-t border-brown-deep/20 flex flex-col lg:flex-row justify-between items-center gap-4">
         <p className="text-[11px] uppercase tracking-widest text-warm-1/50 font-normal">
           © 2026 The Continental Group. All rights reserved.
         </p>

@@ -52,7 +52,7 @@ const ChoiceSection: React.FC = () => {
   const imageRadius = useTransform(scrollYProgress, [0, 0.5], ["40px", "0px"]);
   // const bgOpacity = useTransform(scrollYProgress, [0, 0.4], [0.5, 0.8]);
 
-  const contentOpacity = useTransform(scrollYProgress, [0.5, 0.8], [0, 1]);
+  const contentOpacity = useTransform(scrollYProgress, [0.5, 0.8], [0, 1.5]);
   const contentY = useTransform(scrollYProgress, [0.5, 0.8], ["50px", "0px"]);
 
   return (
@@ -73,7 +73,7 @@ const ChoiceSection: React.FC = () => {
             alt="Continental Horizon"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-linear-to-t from-secondary/30 via-secondary/5 to-transparent" />
+          {/* <div className="absolute inset-0 bg-linear-to-t from-secondary/30 via-secondary/5 to-transparent" /> */}
         </motion.div>
 
         {/* Content Overlay */}
@@ -82,7 +82,7 @@ const ChoiceSection: React.FC = () => {
           className="absolute inset-0 z-10 flex items-center justify-center px-6 md:px-16 pointer-events-none"
         >
           <div className="w-full max-w-9xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-20 pointer-events-auto">
-            {/* Left: Heading & Branding */}
+            {/* Left: Heading, Branding & CTAs */}
             <div className="flex flex-col">
               <div className="max-w-xl">
                 <h2 className="text-6xl md:text-8xl font-extrabold tracking-tighter leading-[0.9] flex flex-col">
@@ -92,13 +92,30 @@ const ChoiceSection: React.FC = () => {
                   <span className="text-white mb-1">
                     <AnimatedText text="Chapter in" />
                   </span>
-                  <span className="text-gold font-display italic font-medium" style={{lineHeight: "90px"}}>
+                  <span
+                    className="text-[#ca8c19] font-display font-bold"
+                    style={{ lineHeight: "90px" }}
+                  >
                     <AnimatedText text="Mazgaon" delay={0.4} />
                   </span>
                 </h2>
+
+                {/* --- ADDED CTA BUTTONS --- */}
+                <div className="mt-10 flex sm:flex-row gap-4">
+                  <button className="px-8 py-4 bg-[#ca8c19] text-brown-deep font-bold uppercase tracking-wider rounded transition-transform hover:scale-105 active:scale-95 shadow-lg">
+                    Enquire Now
+                  </button>
+                  <button className="px-8 py-4 border border-[#ca8c19] text-[#ca8c19] font-bold uppercase tracking-wider rounded transition-all hover:bg-[#ca8c19] hover:text-brown-deep active:scale-95">
+                    View Details
+                  </button>
+                </div>
+                {/* ------------------------- */}
               </div>
             </div>
-            <div className="mt-32 relative"></div>
+
+            {/* Middle: Empty Spacer */}
+            <div className="mt-32 relative hidden lg:block"></div>
+
             {/* Right: The Cards (using FeatureItem) */}
             <div className="flex flex-col gap-6 max-w-[290px] justify-self-end">
               {cards.map((card, index) => (

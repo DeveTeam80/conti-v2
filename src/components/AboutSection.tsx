@@ -18,7 +18,7 @@ function NotchedCard({ num, title, desc, delay = 0, wave }: ValueCardProps) {
   return (
     <div className="flex items-end gap-3 sm:gap-4 w-full">
       {/* Left numbering indicator aligned with the bottom edge */}
-      <span className="font-serif text-[15px] text-brown-mid/60 tracking-wider mb-3 shrink-0 select-none">
+      <span className="font-serif text-[15px] text-brown-deep/60 tracking-wider mb-3 shrink-0 select-none">
         ({num})
       </span>
 
@@ -45,7 +45,7 @@ function NotchedCard({ num, title, desc, delay = 0, wave }: ValueCardProps) {
           {title}
         </h3>
         
-        <p className="font-sans text-[15px] sm:text-[12px] text-brown-mid font-normal tracking-wide max-w-[190px] mx-auto leading-relaxed mt-5 sm:mt-6 whitespace-pre-line select-text">
+        <p className="font-sans text-[15px] sm:text-[12px] text-brown-deep font-normal tracking-wide max-w-[190px] mx-auto leading-relaxed mt-5 sm:mt-6 whitespace-pre-line select-text">
           {desc}
         </p>
       </motion.div>
@@ -155,7 +155,7 @@ export default function AboutSection() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-10% 0px -5% 0px", amount: 0.1 }}
                 transition={{ duration: 1.2, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
-                className="text-brown-mid text-2xl sm:text-[13px] leading-relaxed font-normal tracking-wide select-text border-l border-brown-deep/20 pl-4"
+                className="text-brown-deep text-2xl sm:text-[13px] leading-relaxed font-normal tracking-wide select-text border-l border-brown-deep/20 pl-4"
               >
                 Our mission is to immerse you in a lifestyle that balances refined aesthetics, architectural excellence, and a profound sense of community.
               </motion.p>

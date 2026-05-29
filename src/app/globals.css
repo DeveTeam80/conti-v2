@@ -5,7 +5,7 @@
 /* 1. Register Theme Tokens, Typography Mappings & Gradients */
 @theme {
   --color-brown-deep: #0f395c;
-  --color-brown-mid: #4a3c3c;
+  --color-brown-deep: #4a3c3c;
   --color-brown: #352b2b;
 
   --color-gold-a: #eec06b;
